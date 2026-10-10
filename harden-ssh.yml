@@ -1,0 +1,17 @@
+- hosts: nodes
+  become: true
+  tasks:
+    - name: Harden SSH settings
+      ansible.builtin.copy:
+        dest: /etc/ssh/sshd_config.d/00-hardening.conf
+        content: |
+          PermitRootLogin no
+          PasswordAuthentication no
+        mode: "0600"
+        validate: /usr/sbin/sshd -t -f %s
+      notify: Restart sshd
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted

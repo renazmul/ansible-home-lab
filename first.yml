@@ -1,0 +1,7 @@
+- hosts: nodes
+  become: true
+  tasks:
+    - name: Install chrony
+      ansible.builtin.dnf:
+        name: chrony
+        state: present

@@ -1,0 +1,31 @@
+- hosts: nodes
+  become: true
+  vars:
+    allowed_services:
+      - ssh
+    removed_services:
+      - cockpit
+      - dhcpv6-client
+      - http
+  tasks:
+    - name: Make sure firewalld is running
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Allow required services
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        state: enabled
+        permanent: true
+        immediate: true
+      loop: "{{ allowed_services }}"
+
+    - name: Remove unneeded services
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        state: disabled
+        permanent: true
+        immediate: true
+      loop: "{{ removed_services }}"
