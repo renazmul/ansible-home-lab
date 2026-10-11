@@ -1,0 +1,11 @@
+- hosts: nodes
+  become: true
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Write demo secret to a protected file
+      ansible.builtin.copy:
+        dest: /root/vault_demo.txt
+        content: "{{ demo_secret }}\n"
+        mode: "0600"
+      no_log: true
