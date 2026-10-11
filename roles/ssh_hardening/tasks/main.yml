@@ -1,0 +1,10 @@
+---
+- name: Harden SSH settings
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-hardening.conf
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+    mode: "0600"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Restart ssh

@@ -1,0 +1,7 @@
+---
+allowed_services:
+  - ssh
+removed_services:
+  - cockpit
+  - dhcpv6-client
+  - http
