@@ -15,3 +15,12 @@ Lab only. No production systems.
 
 ## Result
 Each change was checked before and after (sshd -T, firewall-cmd).
+
+## Roles
+- ssh_hardening (harden-ssh-role.yml): disables root login and password login; tested on AlmaLinux and Ubuntu
+- firewall_hardening (harden-firewall-role.yml): firewalld allows SSH only; tested on AlmaLinux
+- ufw_hardening (harden-ufw-role.yml): ufw allows SSH first, then enables the firewall; tested on Ubuntu
+
+## Requirements
+- ansible-core 2.14
+- Collections: ansible.posix, community.general
