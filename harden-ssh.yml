@@ -1,5 +1,7 @@
-- hosts: nodes
+- hosts: all
   become: true
+  vars:
+    ssh_service: "{{ 'ssh' if ansible_os_family == 'Debian' else 'sshd' }}"
   tasks:
     - name: Harden SSH settings
       ansible.builtin.copy:
@@ -9,9 +11,9 @@
           PasswordAuthentication no
         mode: "0600"
         validate: /usr/sbin/sshd -t -f %s
-      notify: Restart sshd
+      notify: Restart ssh
   handlers:
-    - name: Restart sshd
+    - name: Restart ssh
       ansible.builtin.service:
-        name: sshd
+        name: "{{ ssh_service }}"
         state: restarted
