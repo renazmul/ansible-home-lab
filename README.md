@@ -4,12 +4,12 @@ Small home lab to practice Linux automation with Ansible.
 Lab only. No production systems.
 
 ## Lab
-- 1 control node and 2 managed nodes (AlmaLinux 9.8, VMware)
+- 1 control node and 3 managed nodes (2 AlmaLinux 9.8, 1 Ubuntu 20.04, VMware)
 - Key-based SSH from control to managed nodes
 
 ## Playbooks
 - first.yml: install a package idempotently
-- harden-ssh.yml: disable root login and password login
+- harden-ssh.yml: disable root login and password login on AlmaLinux and Ubuntu (OS-family variable)
 - harden-firewall.yml: allow only SSH in firewalld (variables and loops)
 - motd.yml: per-server login banner from a Jinja2 template
 
