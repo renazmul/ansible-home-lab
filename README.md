@@ -12,6 +12,7 @@ Lab only. No production systems.
 - harden-ssh.yml: disable root login and password login on AlmaLinux and Ubuntu (OS-family variable)
 - harden-firewall.yml: allow only SSH in firewalld (variables and loops)
 - motd.yml: per-server login banner from a Jinja2 template
+- wazuh-agent.yml: installs the Wazuh agent (4.14.8) on AlmaLinux nodes and connects it to a lab Wazuh server; tested on one node
 
 ## Result
 Each change was checked before and after (sshd -T, firewall-cmd).
@@ -24,3 +25,6 @@ Each change was checked before and after (sshd -T, firewall-cmd).
 ## Requirements
 - ansible-core 2.14
 - Collections: ansible.posix, community.general
+
+## Monitoring test
+Failed SSH logins with a non-existent user, run only against my own lab, were detected by Wazuh (rule 5710, MITRE T1110.001).
