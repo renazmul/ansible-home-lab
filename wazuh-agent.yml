@@ -1,0 +1,29 @@
+- hosts: nodes
+  become: true
+  vars:
+    wazuh_manager: "192.168.0.243"
+    wazuh_version: "4.14.8"
+  tasks:
+    - name: Import Wazuh GPG key
+      ansible.builtin.rpm_key:
+        key: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        state: present
+    - name: Add Wazuh repository
+      ansible.builtin.yum_repository:
+        name: wazuh
+        description: Wazuh repository
+        baseurl: https://packages.wazuh.com/4.x/yum/
+        gpgkey: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        gpgcheck: true
+        enabled: true
+    - name: Install Wazuh agent (same version as manager)
+      ansible.builtin.dnf:
+        name: "wazuh-agent-{{ wazuh_version }}"
+        state: present
+      environment:
+        WAZUH_MANAGER: "{{ wazuh_manager }}"
+    - name: Enable and start the agent
+      ansible.builtin.service:
+        name: wazuh-agent
+        enabled: true
+        state: started
