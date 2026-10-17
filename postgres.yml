@@ -1,0 +1,16 @@
+- hosts: node1
+  become: true
+  tasks:
+    - name: Install PostgreSQL 16 server (module stream)
+      ansible.builtin.dnf:
+        name: "@postgresql:16/server"
+        state: present
+    - name: Initialize the database cluster
+      ansible.builtin.command: postgresql-setup --initdb
+      args:
+        creates: /var/lib/pgsql/data/PG_VERSION
+    - name: Enable and start PostgreSQL
+      ansible.builtin.service:
+        name: postgresql
+        enabled: true
+        state: started

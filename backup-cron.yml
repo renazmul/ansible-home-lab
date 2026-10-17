@@ -1,0 +1,19 @@
+- hosts: node1
+  become: true
+  tasks:
+    - name: Install cronie (the cron daemon)
+      ansible.builtin.dnf:
+        name: cronie
+        state: present
+    - name: Enable and start crond
+      ansible.builtin.service:
+        name: crond
+        enabled: true
+        state: started
+    - name: Schedule PostgreSQL backup every 3 hours
+      ansible.builtin.cron:
+        name: "pg backup labdb"
+        user: postgres
+        minute: "0"
+        hour: "*/3"
+        job: "/usr/local/bin/pg_backup.sh"
