@@ -1,0 +1,39 @@
+- hosts: node1
+  become: true
+  tasks:
+    - name: Backup service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/pg-backup.service
+        content: |
+          [Unit]
+          Description=PostgreSQL labdb backup
+          After=postgresql.service
+          Requires=postgresql.service
+          [Service]
+          Type=oneshot
+          User=postgres
+          ExecStart=/usr/local/bin/pg_backup.sh
+    - name: Backup timer (every 3 hours, catches up missed runs)
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/pg-backup.timer
+        content: |
+          [Unit]
+          Description=Run PostgreSQL backup every 3 hours
+          [Timer]
+          OnCalendar=*-*-* 00/3:00:00
+          Persistent=true
+          [Install]
+          WantedBy=timers.target
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+    - name: Enable and start the backup timer
+      ansible.builtin.systemd:
+        name: pg-backup.timer
+        enabled: true
+        state: started
+    - name: Remove the old cron job (the timer replaces it)
+      ansible.builtin.cron:
+        name: "pg backup labdb"
+        user: postgres
+        state: absent
