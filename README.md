@@ -13,6 +13,8 @@ Lab only. No production systems.
 - harden-firewall.yml: allow only SSH in firewalld (variables and loops)
 - motd.yml: per-server login banner from a Jinja2 template
 - wazuh-agent.yml: installs the Wazuh agent (4.14.8) on AlmaLinux nodes and connects it to a lab Wazuh server; tested on one node
+- postgres.yml: installs PostgreSQL 16 (module stream) and initializes the database
+- pg_backup.sh and backup-cron.yml: dated pg_dump backups every 3 hours with 7-day retention
 
 ## Result
 Each change was checked before and after (sshd -T, firewall-cmd).
@@ -28,3 +30,6 @@ Each change was checked before and after (sshd -T, firewall-cmd).
 
 ## Monitoring test
 Failed SSH logins with a non-existent user, run only against my own lab, were detected by Wazuh (rule 5710, MITRE T1110.001).
+
+## Disaster recovery test
+Backups were copied to a second machine and restored on a separate server with pg_restore; the restored data was verified (fake lab data only).
